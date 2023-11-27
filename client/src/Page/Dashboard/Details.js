@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Container, Typography, CircularProgress, TextField, Button, Box } from '@mui/material';
 
 function UserDetails() {
     const { userId } = useParams();
@@ -23,38 +24,69 @@ function UserDetails() {
     }, [userId]);
 
     return (
-        <div className="container mt-4">
-            <h2>User Details</h2>
+        <Container maxWidth="sm" style={{ marginTop: '40px', backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px' }}>
+            <Typography variant="h4" gutterBottom style={{ color: '#007bff' }}>
+                User Details
+            </Typography>
             {loading ? (
-                <p>Loading...</p>
+                <CircularProgress style={{ color: '#007bff' }} />
             ) : user ? (
                 <form>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" id="username" value={user.username} readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" className="form-control" id="email" value={user.email} readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="experience">Experience</label>
-                        <input type="text" className="form-control" id="experience" value={user.Experience} readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <textarea className="form-control" id="description" rows="3" value={user.description} readOnly></textarea>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="dob">Date of Birth</label>
-                        <input type="text" className="form-control" id="dob" value={user.DOB} readOnly />
-                    </div>
+                    <TextField
+                        label="Username"
+                        value={user.username}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        InputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                        label="Email"
+                        value={user.email}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        InputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                        label="Experience"
+                        value={user.Experience}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        InputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                        label="Description"
+                        value={user.description}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        multiline
+                        rows={3}
+                        InputProps={{ readOnly: true }}
+                    />
+                    <TextField
+                        label="Date of Birth"
+                        value={user.DOB}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        InputProps={{ readOnly: true }}
+                    />
                     {/* Add other fields here */}
                 </form>
             ) : (
-                <p>No user found</p>
+                <Typography variant="body1" style={{ color: 'red' }}>No user found</Typography>
             )}
-        </div>
+            <Box mt={3}>
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" color="secondary">
+                        Back
+                    </Button>
+                </Link>
+            </Box>
+        </Container>
     );
 }
 

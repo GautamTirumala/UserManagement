@@ -1,47 +1,142 @@
-
-.react-datepicker-wrapper {
-    display: inline-block;
-    padding: 0;
-    border: 0;
-    width: 100%;
+.disabled-button:hover {
+  content: '🚫'; /* Change to ban symbol on hover */
 }
-.custom-datepicker {
-    /* Add your custom styles here */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    /* Add any other styles you want */
+.add-user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(120deg, #7e7f86, #e4d5d5); /* Gradient colors */
+  overflow: hidden; /* Ensures futuristic animations won't overflow */
+}
+
+/* Form styles */
+.add-user-form {
+  width: 90%;
+  max-width: 700px;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  border-radius: 15px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards, slideIn 0.8s ease 0.5s forwards;
+  transform-origin: top center; /* Origin for scale animation */
+}
+
+/* Animation for form - Fade in */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
   }
- 
-/* UserDetails.css */
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+/* Animation for form - Slide in */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Styling for inputs */
+.add-user-form .MuiTextField-root {
+  margin-bottom: 25px;
+  color: #333;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Hover effect for inputs */
+.add-user-form .MuiTextField-root:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px); /* Lifts the input slightly on hover */
+}
+
+/* Styling for labels */
+.add-user-form .MuiInputLabel-root {
+  color: #666;
+}
+
+/* Styling for buttons */
+.add-user-form .MuiButton-root {
+  margin-right: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for buttons */
+.add-user-form .MuiButton-root:hover {
+  background-color: #45a049;
+  transform: scale(1.05); /* Slight scale increase on hover */
+}
+
+/* Additional styles for UserDetails container */
 .userDetails-container {
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-    margin-bottom: 20px;
+.stop-on-hover:hover::after {
+  content: '\00D7'; /* Unicode for the "times" symbol */
+  margin-left: 7px;
+  color: #ff5252; /* Red color for close icon */
 }
 
-label {
-    font-weight: bold;
+/* Additional styles for Material-UI components */
+.css-hip9hq-MuiPaper-root-MuiAppBar-root {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: none;
+  border-bottom: 1px solid #ddd;
 }
 
-input[type="text"],
-input[type="email"],
-textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    transition: border-color 0.3s;
+/* Media query for responsiveness */
+@media screen and (max-width: 600px) {
+  .add-user-form {
+    padding: 30px;
+  }
 }
 
-input[type="text"]:read-only,
-input[type="email"]:read-only,
-textarea:read-only {
-    background-color: #eee;
-    border-color: #eee;
-}
+
+  /* Table styles */
+  .table-header {
+    background-color: rgba(228, 226, 226, 0.753);
+    font-size: 20px;
+  }
+  
+  .table-row:hover {
+    background-color: #e7e6e6; /* Darker background on hover */
+    transition: background-color 0.3s ease;
+  }
+  
+  .table-row {
+    transition: background-color 0.3s ease;
+  }
+  
+  .table-row td {
+    font-size: 18px;
+    padding: 12px;
+    color: #000000; 
+  }
+  
+  .css-hip9hq-MuiPaper-root-MuiAppBar-root {
+    box-shadow: none;
+    border-bottom: 1px solid #333;
+  }
+  
+  

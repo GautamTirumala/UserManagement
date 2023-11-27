@@ -8,33 +8,36 @@ import Add from './Add';
 import Edit from './Edit';
 
 function Dashboard() {
-    const [employees, setEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [users, setusers] = useState([]);
+    const [selecteduser, setSelecteduser] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
+    
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
+        const token=localStorage.getItem('userData')
         try {
-            const response = await axios.get('http://localhost:5000/api/users');
-            setEmployees(response.data);
+            const response = await axios.get('http://localhost:5000/api/users',{
+            headers: {
+                Authorization: token, 
+              }
+            });
+            setusers(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     const handleEdit = (id) => {
-        console.log(id)
-        const employee = employees.find((employee) => employee._id === id);
-        setSelectedEmployee(employee);
+        const user = users.find((user) => user._id === id);
+        setSelecteduser(user);
         setIsEditing(true);
     };
 
     const handleDelete = async (id) => {
-        console.log(id)
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -43,36 +46,35 @@ function Dashboard() {
             isConfirmed: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
         }).then(async (result) => {
-            debugger
-            if (result) {
+            if (result.value) {
                 try {
                     await axios.delete(`http://localhost:5000/api/users/${id}`);
-                    const updatedEmployees = employees.filter((employee) => employee._id !== id);
+                    const updatedusers = users.filter((user) => user._id !== id);
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Deleted!',
-                        text: 'Employee data has been deleted.',
+                        text: 'user data has been deleted.',
                         showConfirmButton: false,
                         timer: 1500,
                     });
 
-                    setEmployees(updatedEmployees);
+                    setusers(updatedusers);
                 } catch (error) {
-                    console.error('Error deleting employee:', error);
+                    console.error('Error deleting user:', error);
                 }
             }
         });
     };
 
     return (
-        <div className='container'>
+        <div className=''  >
             {/* List */}
             {!isAdding && !isEditing && (
                 <>
                     <Header setIsAdding={setIsAdding} />
                     <List
-                        employees={employees}
+                        users={users}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
                     />
@@ -81,17 +83,17 @@ function Dashboard() {
             {/* Add */}
             {isAdding && (
                 <Add
-                    employees={employees}
-                    setEmployees={setEmployees}
+                    users={users}
+                    setusers={setusers}
                     setIsAdding={setIsAdding}
                 />
             )}
             {/* Edit */}
             {isEditing && (
                 <Edit
-                    employees={employees}
-                    selectedEmployee={selectedEmployee}
-                    setEmployees={setEmployees}
+                    users={users}
+                    selecteduser={selecteduser}
+                    setusers={setusers}
                     setIsEditing={setIsEditing}
                 />
             )}

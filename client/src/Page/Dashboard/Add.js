@@ -1,34 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { CSSTransition } from 'react-transition-group';
 
-
-function Add({ employees, setEmployees, setIsAdding }) {
+function Add({ users, setusers, setIsAdding }) {
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
   const [email, setEmail] = useState('');
   const [DOB, setDOB] = useState(null);
   const [Experience, setExperience] = useState('');
 
-  const textInput = useRef(null);
-
-  useEffect(() => {
-    textInput.current.focus();
-  }, []);
-
   const handleAdd = async (e) => {
     e.preventDefault();
-    if (!username || !description || !email || !DOB || !Experience) {
-      return Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'All fields are required.',
-        showConfirmButton: true,
-      });
-    }
 
+    if (!validateUsername(username) || !validateEmail(email) || !validateDOB(DOB)) {
+      return;
+    }
+    const token = localStorage.getItem('userData');
     try {
       const response = await axios.post('http://localhost:5000/api/users', {
         username,
@@ -36,100 +25,141 @@ function Add({ employees, setEmployees, setIsAdding }) {
         email,
         DOB,
         Experience,
+      },{
+        headers: {
+          Authorization: token, // Set the Authorization header with the token
+        },
       });
-
-      const newEmployee = response.data;
-
-      setEmployees([...employees, newEmployee]);
+      const newUser = response.data;
+      setusers([...users, newUser]);
       setIsAdding(false);
 
       Swal.fire({
         icon: 'success',
         title: 'Added!',
-        text: `${username}'s data has been Added.`,
+        text: `${username}'s data has been added.`,
         showConfirmButton: false,
         timer: 1500,
       });
     } catch (error) {
-      console.error('Error adding employee:', error);
+      console.error('Error adding user:', error);
     }
   };
 
+  const validateUsername = (username) => {
+    if (!username || username.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Username is required.',
+        showConfirmButton: true,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    if (!email || !re.test(email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Please enter a valid email address.',
+        showConfirmButton: true,
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const validateDOB = (DOB) => {
+    if (!DOB) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'DOB is required.',
+        showConfirmButton: true,
+      });
+      return false;
+    }
+    return true;
+  };
+
   return (
-    <div className="small-container">
-      <form onSubmit={handleAdd}>
-        <h1>Add User</h1>
-        <div className="form-group">
-          <label htmlFor="Username">Username</label>
-          <input
-            id="Username"
-            type="text"
-            ref={textInput}
-            name="Username"
+    <div className="add-user-container">
+
+      <CSSTransition in={true} appear={true} timeout={500} classNames="fade">
+
+        <form onSubmit={handleAdd} className="add-user-form">
+          <h1>Add User</h1>
+          <TextField
+            label="Username"
+            variant="outlined"
             value={username}
-            placeholder="Enter username"
             onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <input
-            id="description"
-            type="text"
-            name="description"
+          <TextField
+            label="Description"
+            variant="outlined"
             value={description}
-            placeholder="Enter description"
             onChange={(e) => setDescription(e.target.value)}
+            fullWidth
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
+          <TextField
+            label="Email"
+            variant="outlined"
             value={email}
-            placeholder="Enter email"
             onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="DOB">DOB</label>
-          <input
-            id="DOB"
+          <TextField
+            label="DOB"
+            variant="outlined"
             type="date"
-            name="DOB"
             value={DOB}
-            onChange={e => setDOB(e.target.value)}
+            onChange={(e) => setDOB(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="Experience">Experience</label>
-          <select
-            id="Experience"
-            name="Experience"
-            value={Experience}
-            onChange={(e) => setExperience(e.target.value)}
-          >
-            <option value="">Select Experience</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-        <div className="form-group">
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="experience-label">Experience</InputLabel>
+            <Select
+              labelId="experience-label"
+              value={Experience}
+              onChange={(e) => setExperience(e.target.value)}
+              label="Experience"
+            >
+              <MenuItem value="Beginner">Beginner</MenuItem>
+              <MenuItem value="Intermediate">Intermediate</MenuItem>
+              <MenuItem value="Advanced">Advanced</MenuItem>
+            </Select>
+          </FormControl>
+
           <div style={{ marginTop: '30px' }}>
-            <input type="submit" value="Add" />
-            <input
+            <Button
+              type="submit"
+              variant="contained" color="primary">
+              Add
+            </Button>
+            <Button
               style={{ marginLeft: '12px' }}
-              className="muted-button"
-              type="button"
-              value="Cancel"
+              variant="contained"
+              color="secondary"
               onClick={() => setIsAdding(false)}
-            />
+            >
+              Cancel
+            </Button>
           </div>
-        </div>
-      </form>
+        </form>
+      </CSSTransition>￼￼
     </div>
   );
 }
